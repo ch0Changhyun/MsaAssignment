@@ -52,6 +52,22 @@ public class OrderService {
         return "주문이 정상 처리 되었습니다.";
     }
 
+    @Transactional(readOnly = true)
+    public OrderResponseDto getOrderById(Long orderId) {
+        // 주문 조회
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderId));
+
+        // 응답 DTO 생성
+        return OrderResponseDto.builder()
+                .orderId(order.getOrderId())
+                .productIds(order.getOrderProducts()
+                        .stream()
+                        .map(OrderProduct::getProductId)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
     @Transactional
     public OrderResponseDto addProductToOrder(Long orderId, OrderRequestDto requestDto) {
         // 주문 조회
@@ -85,5 +101,4 @@ public class OrderService {
                         .collect(Collectors.toList()))
                 .build();
     }
-
 }

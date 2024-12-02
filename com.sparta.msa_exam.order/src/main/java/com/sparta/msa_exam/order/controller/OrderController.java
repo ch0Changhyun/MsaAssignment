@@ -39,6 +39,16 @@ public class OrderController {
                 .body(message);
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
+        OrderResponseDto responseDto = orderService.getOrderById(orderId);
+
+        // 서버 포트 정보 응답 헤더에 포함
+        return ResponseEntity.ok()
+                .header("Server-Port", serverPort)
+                .body(responseDto);
+    }
+
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderResponseDto> addProductToOrder(
             @PathVariable Long orderId,

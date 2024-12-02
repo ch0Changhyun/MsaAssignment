@@ -51,4 +51,39 @@ public class OrderService {
         }
         return "주문이 정상 처리 되었습니다.";
     }
+
+    @Transactional
+    public OrderResponseDto addProductToOrder(Long orderId, OrderRequestDto requestDto) {
+        // 주문 조회
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderId));
+
+        // 요청된 상품 ID 리스트를 순회하면서 처리
+        for (Long productId : requestDto.getProductIds()) {
+            // 상품 존재 여부 확인 (상품이 존재하지 않으면 예외 처리)
+            try {
+                productClient.getProductById(productId);  // 외부 상품 API 호출
+            } catch (Exception e) {
+                // 상품이 존재하지 않거나 호출 실패 시 예외 처리
+                throw new IllegalArgumentException("Product not found with ID: " + productId);
+            }
+
+            // 주문에 상품 추가
+            OrderProduct orderProduct = new OrderProduct(productId);
+            order.addOrderProduct(orderProduct);
+        }
+
+        // 주문 저장
+        Order updatedOrder = orderRepository.save(order);
+
+        // 응답 생성
+        return OrderResponseDto.builder()
+                .orderId(updatedOrder.getOrderId())
+                .productIds(updatedOrder.getOrderProducts()
+                        .stream()
+                        .map(OrderProduct::getProductId)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
 }

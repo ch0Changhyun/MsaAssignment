@@ -1,5 +1,6 @@
 package com.sparta.msa_exam.order.controller;
 
+import com.sparta.msa_exam.order.dto.AddProductRequestDto;
 import com.sparta.msa_exam.order.dto.OrderRequestDto;
 import com.sparta.msa_exam.order.dto.OrderResponseDto;
 import com.sparta.msa_exam.order.service.OrderService;
@@ -36,5 +37,16 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .header("Server-Port", serverPort)
                 .body(message);
+    }
+
+    @PutMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDto> addProductToOrder(
+            @PathVariable Long orderId,
+            @RequestBody OrderRequestDto requestDto) {
+        OrderResponseDto responseDto = orderService.addProductToOrder(orderId, requestDto);
+
+        return ResponseEntity.ok()
+                .header("Server-Port", serverPort)
+                .body(responseDto);
     }
 }

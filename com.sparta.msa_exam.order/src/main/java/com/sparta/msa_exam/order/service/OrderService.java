@@ -1,5 +1,6 @@
 package com.sparta.msa_exam.order.service;
 
+import com.sparta.msa_exam.order.client.ProductClient;
 import com.sparta.msa_exam.order.dto.OrderRequestDto;
 import com.sparta.msa_exam.order.dto.OrderResponseDto;
 import com.sparta.msa_exam.order.entity.Order;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final ProductClient productClient;
 
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
@@ -38,5 +40,15 @@ public class OrderService {
                         .map(OrderProduct::getProductId)
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    @Transactional
+    public String createOrderWithFail(Long productId){
+        try{
+            productClient.getProductById(productId);
+        } catch (IllegalStateException e) {
+            return e.getMessage();
+        }
+        return "주문이 정상 처리 되었습니다.";
     }
 }

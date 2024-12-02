@@ -1,9 +1,19 @@
+server:
+  port: 19093
+
 spring:
   application:
     name: product-service
 
-server:
-  port: 19093
+  datasource:
+    url: jdbc:postgresql://localhost:5432/msa_assignment
+    username: postgres
+    password: database123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 eureka:
   client:

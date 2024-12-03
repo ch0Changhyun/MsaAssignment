@@ -41,4 +41,11 @@ public class ProductController {
         return ResponseEntity.ok().headers(headers).body(products);
     }
 
+    @GetMapping("/{productId}") public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long productId) {
+        ProductResponseDto product = productService.getProductById(productId);
+        // 응답 헤더에 Server-Port 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Server-Port", serverPort);
+        return ResponseEntity.ok().headers(headers).body(product); }
+
 }

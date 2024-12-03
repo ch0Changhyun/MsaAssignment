@@ -1,6 +1,5 @@
 package com.sparta.msa_exam.order.controller;
 
-import com.sparta.msa_exam.order.dto.AddProductRequestDto;
 import com.sparta.msa_exam.order.dto.OrderRequestDto;
 import com.sparta.msa_exam.order.dto.OrderResponseDto;
 import com.sparta.msa_exam.order.service.OrderService;
@@ -51,7 +50,7 @@ public class OrderController {
 
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderResponseDto> addProductToOrder(
-            @PathVariable Long orderId,
+            @PathVariable("orderId") Long orderId,
             @RequestBody OrderRequestDto requestDto) {
         OrderResponseDto responseDto = orderService.addProductToOrder(orderId, requestDto);
 

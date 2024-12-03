@@ -3,6 +3,7 @@ package com.sparta.msa_exam.order.service;
 import com.sparta.msa_exam.order.client.ProductClient;
 import com.sparta.msa_exam.order.dto.OrderRequestDto;
 import com.sparta.msa_exam.order.dto.OrderResponseDto;
+import com.sparta.msa_exam.order.dto.ProductResponseDto;
 import com.sparta.msa_exam.order.entity.Order;
 import com.sparta.msa_exam.order.entity.OrderProduct;
 import com.sparta.msa_exam.order.repository.OrderRepository;
@@ -42,12 +43,14 @@ public class OrderService {
                 .build();
     }
 
-    @Transactional
-    public String createOrderWithFail(Long productId){
+    @Transactional public String createOrderWithFail(Long productId){
         try{
-            productClient.getProductById(productId);
-        } catch (IllegalStateException e) {
-            return e.getMessage();
+            ProductResponseDto product = productClient.getProductById(productId);
+            if (product.getMessage() != null) {
+                return product.getMessage();
+            }
+        } catch (Exception e) {
+            return "잠시 후에 주문 추가를 요청 해주세요.";
         }
         return "주문이 정상 처리 되었습니다.";
     }

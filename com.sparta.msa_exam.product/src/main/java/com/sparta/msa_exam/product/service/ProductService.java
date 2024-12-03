@@ -40,4 +40,14 @@ public class ProductService {
                 .map(product -> new ProductResponseDto(product.getProductId(), product.getName(), product.getSupplyPrice()))
                 .collect(Collectors.toList());
     }
+
+    public ProductResponseDto getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
+        return ProductResponseDto.builder()
+                .productId(product.getProductId())
+                .name(product.getName())
+                .supplyPrice(product.getSupplyPrice())
+                .build();
+    }
 }

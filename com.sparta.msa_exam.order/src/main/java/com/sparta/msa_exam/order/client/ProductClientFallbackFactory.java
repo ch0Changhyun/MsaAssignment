@@ -1,6 +1,6 @@
 package com.sparta.msa_exam.order.client;
 
-import com.sparta.msa_exam.product.dto.ProductResponseDto;
+import com.sparta.msa_exam.order.dto.ProductResponseDto;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,12 @@ public class ProductClientFallbackFactory implements FallbackFactory<ProductClie
             @Override
             public ProductResponseDto getProductById(Long productId) {
                 // Fallback 응답 메시지 생성
-                throw new IllegalStateException("잠시 후에 주문 추가를 요청 해주세요.");
+                ProductResponseDto fallbackResponse = new ProductResponseDto();
+                fallbackResponse.setProductId(productId);
+                fallbackResponse.setName("Unavailable");
+                fallbackResponse.setSupplyPrice(0);
+                fallbackResponse.setMessage("잠시 후에 주문 추가를 요청 해주세요.");
+                return fallbackResponse;
             }
         };
     }

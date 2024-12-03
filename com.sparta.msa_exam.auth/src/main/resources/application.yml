@@ -1,0 +1,30 @@
+server:
+  port: 19095
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/msa_assignment  # PostgreSQL DB URL
+    username: postgres                       # PostgreSQL 사용자명
+    password: database123                       # PostgreSQL 비밀번호
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update                            # 개발 중에는 update, 운영 시에는 validate 또는 none
+    show-sql: true                                # SQL 출력 (개발 중 디버깅용)
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+
+service:
+  jwt:
+    access-expiration: 3600000                     # JWT 토큰 만료 시간 (1시간, 밀리초 단위)
+    secret-key: "401b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429080fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae731f5a65ed1"
+

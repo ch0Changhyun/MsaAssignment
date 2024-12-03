@@ -8,6 +8,8 @@ import com.sparta.msa_exam.order.entity.Order;
 import com.sparta.msa_exam.order.entity.OrderProduct;
 import com.sparta.msa_exam.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +58,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "orders", key = "#orderId", unless = "#result == null", cacheManager = "cacheManager")
     public OrderResponseDto getOrderById(Long orderId) {
         // 주문 조회
         Order order = orderRepository.findById(orderId)
@@ -72,6 +75,7 @@ public class OrderService {
     }
 
     @Transactional
+    @CachePut(value = "orders", key = "#orderId", cacheManager = "cacheManager")
     public OrderResponseDto addProductToOrder(Long orderId, OrderRequestDto requestDto) {
         // 주문 조회
         Order order = orderRepository.findById(orderId)

@@ -6,6 +6,11 @@ spring:
   application:
     name: order-service
 
+  cache:
+    type: caffeine  # Caffeine 캐시 사용
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=60s  # 60초 후 캐시 만료
+
   datasource:
     url: jdbc:postgresql://localhost:5432/msa_assignment
     username: postgres
@@ -20,3 +25,11 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+
+management:
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
+  tracing:
+    sampling:
+      probability: 1.0
